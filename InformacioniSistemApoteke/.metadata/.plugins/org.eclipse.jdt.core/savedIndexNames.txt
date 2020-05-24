@@ -1,0 +1,23 @@
+INDEX VERSION 1.130+C:\Users\Nebojsa\Documents\projekti\InformacioniSistemApoteke\.metadata\.plugins\org.eclipse.jdt.core
+3791457841.index
+582894000.index
+4179026289.index
+1242954127.index
+1797428613.index
+3572833282.index
+1658515071.index
+2848879791.index
+3649599392.index
+3284213622.index
+371666752.index
+1190830562.index
+647989244.index
+2516897371.index
+3290920259.index
+1433752259.index
+1527789543.index
+2641752142.index
+3214187511.index
+252199472.index
+2514718710.index
+75768302.index

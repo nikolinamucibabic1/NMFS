@@ -1,0 +1,70 @@
+package controller;
+
+import java.awt.event.ActionEvent;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.ArrayList;
+
+import javax.swing.AbstractAction;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+
+import model.Korisnik;
+import model.Lek;
+import view.MainFrame;
+import view.SellMedicament;
+
+public class SellMedicamentController extends AbstractAction {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	public ArrayList<Lek> lekovi = null;
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		// TODO Auto-generated method stub
+		JButton btn = (JButton) arg0.getSource();
+		MainFrame frame = (MainFrame) btn.getTopLevelAncestor();
+
+		Object[] possibilities = {"Sifra leka", "Recept"};
+		String s = (String)JOptionPane.showInputDialog(
+				frame,
+				"Odaberite nacin prodaje lekova:",
+				"Prodaja lekova",
+				JOptionPane.PLAIN_MESSAGE,
+				null,
+				possibilities,
+				"Sifra leka");
+		if(s!=null) {
+
+			try {
+				FileInputStream file = new FileInputStream("C:\\Users\\Nebojsa\\Documents\\projekti\\InformacioniSistemApoteke\\InformacioniSistemApoteke\\src\\resources\\medicaments.txt"); 
+				ObjectInputStream in = new ObjectInputStream(file); 
+				lekovi = new ArrayList<Lek>();
+				// Method for deserialization of object
+				Korisnik korisnik;
+				try {
+					lekovi = (ArrayList<Lek>) in.readObject();
+				} catch (IOException ex) {
+				} catch (ClassNotFoundException ex) {
+				}
+
+				in.close();
+				file.close();
+
+			} catch (IOException o) {
+				System.out.println("An error occurred.");
+				o.printStackTrace();	
+			}
+			if(s.equals("Sifra leka")) {
+				SellMedicament sellMedicament = new SellMedicament(lekovi,"Sifra leka");
+			} else {
+				
+			}
+		}
+	}
+
+}

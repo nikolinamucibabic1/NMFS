@@ -1,0 +1,15 @@
+package model;
+
+import java.io.Serializable;
+
+public class Potrosnja implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Lek lek;
+	private Korisnik apotekar;
+	private int kolicina;
+
+}

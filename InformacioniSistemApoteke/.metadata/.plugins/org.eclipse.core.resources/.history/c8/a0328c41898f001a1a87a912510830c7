@@ -1,0 +1,149 @@
+package controller;
+
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+import javax.swing.AbstractAction;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
+import model.Korisnik;
+import model.Lek;
+import model.Recept;
+import view.MainFrame;
+import view.SearchFrame;
+
+public class SearchRecipesController extends AbstractAction{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JTable table;
+	private SearchFrame searchFrame;
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		JButton btn = (JButton) e.getSource();
+		MainFrame frame = (MainFrame) btn.getTopLevelAncestor();
+
+		Object[] possibilities = {"Sifra", "IdLekara", "JMBG", "Sifra leka"};
+		String s = (String)JOptionPane.showInputDialog(
+				frame,
+				"Izaberite po cemu zelite da pretrazite podatke:",
+				"Pretraga recepata",
+				JOptionPane.PLAIN_MESSAGE,
+				null,
+				possibilities,
+				"Sifra");
+		if(s!=null) {
+
+			searchFrame = new SearchFrame(s,"recept");			
+			searchFrame.setVisible(true);
+
+			searchFrame.getOk().addActionListener(new ActionListener(){  
+				public void actionPerformed(ActionEvent e){
+					String vrednost = searchFrame.getVrednost().getText();
+					String[] columnNames = { "Sifra", "IdLekara", "JMBG Pacijenta", "Datum i vreme", "Lek(Kolicina)", "Ukupna cena" };
+					String[][] data = {}; 
+					table = new JTable();
+					DefaultTableModel dtm = new DefaultTableModel(0,0);
+					dtm.setColumnIdentifiers(columnNames);
+					table.setModel(dtm);
+					table.setEnabled(false);
+
+					try {
+
+						FileInputStream file = new FileInputStream("C:\\Users\\Nebojsa\\Documents\\projekti\\InformacioniSistemApoteke\\InformacioniSistemApoteke\\src\\resources\\recipes.txt"); 
+						ObjectInputStream in = new ObjectInputStream(file); 
+						ArrayList<Recept> recepti = new ArrayList<Recept>();
+						// Method for deserialization of object
+						try {
+							recepti = (ArrayList<Recept>) in.readObject();
+						} catch (IOException ex) {
+						} catch (ClassNotFoundException ex) {
+						}
+
+						in.close();
+						file.close();
+
+						for(int i=0;i<recepti.size();i++) {
+							if(s.equals("Sifra")) {
+								if(recepti.get(i).getSifra() == Integer.parseInt(vrednost)) {
+									dtm.addRow(new Object[] { recepti.get(i).getSifra(), recepti.get(i).getIdLekara(), recepti.get(i).getJmbgPacijenta(), dataParsed[3], dataParsed[4] });
+								}
+							}else if(s.equals("IdLekara")) {
+								if(dataParsed[1].toLowerCase().contains(vrednost.toLowerCase())) {
+									dtm.addRow(new Object[] { dataParsed[0], dataParsed[1], dataParsed[2], dataParsed[3], dataParsed[4] });
+								}
+							} else if(s.equals("JMBG")) {
+								if(dataParsed[2].toLowerCase().contains(vrednost.toLowerCase())) {
+									dtm.addRow(new Object[] { dataParsed[0], dataParsed[1], dataParsed[2], dataParsed[3], dataParsed[4] });
+								}
+							} else {
+								if(dataParsed[4].toLowerCase().contains(vrednost.toLowerCase())) {
+									dtm.addRow(new Object[] { dataParsed[0], dataParsed[1], dataParsed[2], dataParsed[3], dataParsed[4] });
+								}
+							}
+						}
+
+					} catch (IOException o) {
+						System.out.println("An error occurred.");
+						o.printStackTrace();
+					}
+
+					try {
+						File myObj = new File("C:\\Users\\Nebojsa\\Documents\\projekti\\InformacioniSistemApoteke\\InformacioniSistemApoteke\\src\\resources\\recipes.txt");
+						Scanner myReader = new Scanner(myObj);
+						while (myReader.hasNextLine()) {
+							String dataFile = myReader.nextLine();
+							String[] dataParsed = dataFile.split(" ");
+							if(s.equals("Sifra")) {
+								if(dataParsed[0].toLowerCase().contains(vrednost.toLowerCase())) {
+									dtm.addRow(new Object[] { dataParsed[0], dataParsed[1], dataParsed[2], dataParsed[3], dataParsed[4] });
+								}
+							}else if(s.equals("IdLekara")) {
+								if(dataParsed[1].toLowerCase().contains(vrednost.toLowerCase())) {
+									dtm.addRow(new Object[] { dataParsed[0], dataParsed[1], dataParsed[2], dataParsed[3], dataParsed[4] });
+								}
+							} else if(s.equals("JMBG")) {
+								if(dataParsed[2].toLowerCase().contains(vrednost.toLowerCase())) {
+									dtm.addRow(new Object[] { dataParsed[0], dataParsed[1], dataParsed[2], dataParsed[3], dataParsed[4] });
+								}
+							} else {
+								if(dataParsed[4].toLowerCase().contains(vrednost.toLowerCase())) {
+									dtm.addRow(new Object[] { dataParsed[0], dataParsed[1], dataParsed[2], dataParsed[3], dataParsed[4] });
+								}
+							}
+							//System.out.println(dataFile);
+						}
+						myReader.close();
+					} catch (FileNotFoundException o) {
+						System.out.println("An error occurred.");
+						o.printStackTrace();
+					}
+
+					JScrollPane sp = new JScrollPane(table);
+					frame.getCentralni().removeAll();
+					frame.getCentralni().add(sp, BorderLayout.CENTER);
+					frame.validate();
+					frame.repaint();
+				}  
+			});  
+
+		}
+
+	}
+}

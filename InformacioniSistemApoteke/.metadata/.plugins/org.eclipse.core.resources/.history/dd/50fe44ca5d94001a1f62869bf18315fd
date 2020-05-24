@@ -1,0 +1,43 @@
+package model;
+
+import java.io.Serializable;
+
+public class Transakcija implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Lek lek;
+	private Korisnik apotekar;
+	private int kolicina;
+	
+	public Transakcija() {
+		
+	}
+
+	public Lek getLek() {
+		return lek;
+	}
+
+	public void setLek(Lek lek) {
+		this.lek = lek;
+	}
+
+	public Korisnik getApotekar() {
+		return apotekar;
+	}
+
+	public void setApotekar(Korisnik apotekar) {
+		this.apotekar = apotekar;
+	}
+
+	public int getKolicina() {
+		return kolicina;
+	}
+
+	public void setKolicina(int kolicina) {
+		this.kolicina = kolicina;
+	}
+	
+}

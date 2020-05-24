@@ -1,0 +1,107 @@
+package view;
+
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Toolkit;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Properties;
+import java.util.TimeZone;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SpinnerDateModel;
+
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
+
+import formatter.DateLabelFormatter;
+
+public class RecipeFrame extends JFrame{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private Container c; 
+    private JLabel title; 
+    private JLabel jmbg; 
+    private JTextField tjmbg; 
+    private JLabel dateTime; 
+    private JDatePickerImpl tdateTime;
+    private JSpinner timeSpinner;
+    private JButton kreiraj;
+	
+	public RecipeFrame() {
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		setSize((int) (screenSize.width / 2), 500);
+		setLocationRelativeTo(null);
+		setTitle("Lek");
+		
+		setResizable(false); 
+		  
+        c = getContentPane(); 
+        c.setLayout(null); 
+
+        title = new JLabel("Kreiranje recepta");
+        title.setFont(new Font("Arial", Font.PLAIN, 30)); 
+        title.setSize(200, 30); 
+        title.setLocation(200, 30); 
+        c.add(title); 
+  
+        jmbg = new JLabel("JMBG pacijenta"); 
+        jmbg.setFont(new Font("Arial", Font.PLAIN, 20)); 
+        jmbg.setSize(200, 20); 
+        jmbg.setLocation(50, 100); 
+        c.add(jmbg); 
+  
+        tjmbg = new JTextField(); 
+        tjmbg.setFont(new Font("Arial", Font.PLAIN, 16)); 
+        tjmbg.setSize(200, 20); 
+        tjmbg.setLocation(200, 100); 
+        c.add(tjmbg); 
+  
+        dateTime = new JLabel("Datum i vreme"); 
+        dateTime.setFont(new Font("Arial", Font.PLAIN, 20)); 
+        dateTime.setSize(200, 20); 
+        dateTime.setLocation(50, 150); 
+        c.add(dateTime); 
+        
+        Properties p = new Properties();
+        p.put("text.today", "Today");
+        p.put("text.month", "Month");
+        p.put("text.year", "Year");
+        
+        UtilDateModel model = new UtilDateModel();
+        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+        model.setDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        JDatePanelImpl datePanel = new JDatePanelImpl(model,p);
+        tdateTime = new JDatePickerImpl(datePanel,new DateLabelFormatter());
+        tdateTime.setSize(200, 20); 
+        tdateTime.setLocation(250, 150); 
+        c.add(tdateTime);
+        
+        timeSpinner = new JSpinner( new SpinnerDateModel() );
+        JSpinner.DateEditor timeEditor = new JSpinner.DateEditor(timeSpinner, "HH:mm:ss");
+        timeSpinner.setEditor(timeEditor);
+        timeSpinner.setValue(new Date());
+        timeSpinner.setSize(200, 20); 
+        timeSpinner.setLocation(450, 150); 
+        c.add(timeSpinner);
+        
+        
+        kreiraj = new JButton("Kreiraj");
+        		
+        kreiraj.setSize(150, 40); 
+        kreiraj.setLocation(220, 350); 
+        c.add(kreiraj);
+  
+        setVisible(true); 
+	}
+}

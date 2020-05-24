@@ -1,0 +1,34 @@
+package controller;
+
+import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+
+import view.MainFrame;
+
+public class DeleteMedicamentController extends AbstractAction {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		JButton btn = (JButton) e.getSource();
+		MainFrame frame = (MainFrame) btn.getTopLevelAncestor();
+
+		String s = (String)JOptionPane.showInputDialog(
+				frame,
+				"Ukucajte sifru leka koji zelite da izbrisete:",
+				"Brisanje lekova",
+				JOptionPane.PLAIN_MESSAGE,
+				null,
+				null,
+				null);
+	}
+
+}

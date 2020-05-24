@@ -1,0 +1,112 @@
+package controller;
+
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.AbstractAction;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+
+import model.Korisnik;
+import model.Lek;
+import view.MainFrame;
+
+@SuppressWarnings("serial")
+public class ShowAllMedicamentsController extends AbstractAction{
+
+	private JTable table;
+
+	@SuppressWarnings("static-access")
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		JButton btn = (JButton) e.getSource();
+		MainFrame frame = (MainFrame) btn.getTopLevelAncestor();
+
+		Object[] possibilities = {"Ime", "Proizvodjac", "Cena"};
+		String s = (String)JOptionPane.showInputDialog(
+				frame,
+				"Izaberite po cemu zelite da sortirate podatke:",
+				"Prikaz lekova",
+				JOptionPane.PLAIN_MESSAGE,
+				null,
+				possibilities,
+				"Ime");
+		if(s!=null) {
+
+			String[] columnNames = { "Sifra", "Ime", "Proizvodjac", "Recept", "Cena" };
+			table = new JTable();
+			DefaultTableModel dtm = new DefaultTableModel(0,0);
+			dtm.setColumnIdentifiers(columnNames);
+			table.setModel(dtm);
+			table.setEnabled(false);
+
+			frame.getInstance().getPretragaLekoviBtn().setVisible(true);
+			frame.getInstance().getPretragaReceptiBtn().setVisible(false);
+
+			try {
+				FileInputStream file = new FileInputStream("C:\\Users\\Nebojsa\\Documents\\projekti\\InformacioniSistemApoteke\\InformacioniSistemApoteke\\src\\resources\\medicaments.txt"); 
+				ObjectInputStream in = new ObjectInputStream(file); 
+				ArrayList<Lek> lekovi = new ArrayList<Lek>();
+				// Method for deserialization of object
+				Korisnik korisnik;
+				try {
+					lekovi = (ArrayList<Lek>) in.readObject();
+				} catch (IOException ex) {
+				} catch (ClassNotFoundException ex) {
+				}
+
+				in.close();
+				file.close();
+
+				for(int i=0;i<lekovi.size();i++) {
+					if(lekovi.get(i).isObrisan()) {
+						
+					}
+					dtm.addRow(new Object[] { lekovi.get(i).getSifra(), lekovi.get(i).getIme(), lekovi.get(i).getProzivodjac(), lekovi.get(i).isRecept(), lekovi.get(i).getCena() });
+				}
+			} catch (IOException o) {
+				System.out.println("An error occurred.");
+				o.printStackTrace();
+			}
+
+
+			TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
+			table.setRowSorter(sorter);
+			List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+			int columnIndexToSort;
+			if(s.equals("Ime")) {
+				columnIndexToSort = 1;
+			} else if(s.equals("Proizvodjac")) {
+				columnIndexToSort = 2;
+			} else {
+				columnIndexToSort = 4;
+			}
+
+			sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.ASCENDING));
+
+			sorter.setSortKeys(sortKeys);
+			sorter.sort();
+
+			// adding it to JScrollPane 
+			JScrollPane sp = new JScrollPane(table);
+			frame.getCentralni().removeAll();
+			frame.getCentralni().add(sp, BorderLayout.CENTER);
+			frame.validate();
+			frame.repaint();
+
+		}
+	}
+}

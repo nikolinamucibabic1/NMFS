@@ -1,0 +1,70 @@
+package controller;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+
+import javax.swing.AbstractAction;
+
+import model.Korisnik;
+import model.Lek;
+import model.Recept;
+import view.RecipeFrame;
+
+public class CreateRecipeController extends AbstractAction {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	public ArrayList<Lek> lekovi = null;
+	public Recept recept;
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		// TODO Auto-generated method stub
+		try {
+			FileInputStream file = new FileInputStream("C:\\Users\\Nebojsa\\Documents\\projekti\\InformacioniSistemApoteke\\InformacioniSistemApoteke\\src\\resources\\medicaments.txt"); 
+			ObjectInputStream in = new ObjectInputStream(file); 
+			lekovi = new ArrayList<Lek>();
+			// Method for deserialization of object
+			Korisnik korisnik;
+			try {
+				lekovi = (ArrayList<Lek>) in.readObject();
+			} catch (IOException ex) {
+			} catch (ClassNotFoundException ex) {
+			}
+
+			in.close();
+			file.close();
+
+		} catch (IOException o) {
+			System.out.println("An error occurred.");
+			o.printStackTrace();	
+		}
+		RecipeFrame recipeFrame = new RecipeFrame(lekovi);
+		
+		recipeFrame.getDodaj().addActionListener(new ActionListener(){  
+			public void actionPerformed(ActionEvent e){
+				
+			}  
+		});  
+		
+		
+		String spinner = recipeFrame.getTimeSpinner().getValue().toString();
+		String[] lista = spinner.split(" ");
+		String vreme = lista[3];
+		
+		String str = recipeFrame.getTdateTime().getJFormattedTextField().getText() + " " + vreme; 
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"); 
+		LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
+		System.out.println("FORMATTED: "+ dateTime);
+
+	}
+
+}
